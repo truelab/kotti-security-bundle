@@ -145,11 +145,4 @@ class AuthenticationHelperTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('\DateTime', $identity->getDateTimestamp());
         $this->assertEquals($this->expectedTicketTimestamp, $identity->getDateTimestamp()->getTimestamp());
     }
-
-    public function testEncodeIpTimestamp()
-    {
-        $this->helper->encodeIpTimestamp('127.0.0.1', '1427720510');
-
-    }
-
 }

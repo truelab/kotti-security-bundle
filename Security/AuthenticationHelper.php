@@ -174,41 +174,14 @@ class AuthenticationHelper implements AuthenticationHelperInterface
         ];
     }
 
-    private function calculateDigest($ip, $timestamp, $userId, $tokens, $userData)
+    /**
+     * Not implemented!!!
+     * We could not make porting from python to php
+     * @throws \Exception
+     */
+    private function calculateDigest()
     {
-        $secret = $this->secret;
-        $userId = $userId;
-        $tokens = $tokens;
-        $userData = $userData;
-
-        $ipTimestamp = $ip . $timestamp;
-
-        # Check to see if this is an IPv6 address
-        if (strpos($ip,':') !== false) {
-            $ipTimestamp = $ip . $timestamp;
-        }else{
-            $ipTimestamp = $this->encodeIpTimestamp($ip, $timestamp);
-        }
-        # encode_ip_timestamp not required, left in for backwards compatibility
-
-
-
-        //return $ipTimestamp;
-        return 'f5e4b03f95637b075f28ad874347781643b0b7f2aea4f7ed4fcd1e8c19479a40667f717476c86246a46fcafb95af1a2214fa3423fe96dec856a3c78b28356fbf';
+        throw new \Exception('Not implemented method! This ticket is not secure!');
     }
 
-    public function encodeIpTimestamp($ip, $timestamp)
-    {
-        $result =  '';
-        $ip = array_map(function ($element) {
-            $num = (int) $element;
-            $dechex = dechex($num);
-            $dechex = strlen($dechex) === 1 ? '0' . $dechex : $dechex;
-            return $dechex;
-        }, explode('.', $ip));
-        
-
-
-        return $result;
-    }
 }
