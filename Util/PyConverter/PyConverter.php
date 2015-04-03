@@ -35,25 +35,28 @@ class PyConverter implements PyConverterInterface
             throw new ChrValueErrorException('ValueError: chr() arg not in range(256)');
         }
 
+        // it's printable ascii char and not equal to ?
         if(ctype_print(chr($ascii)) && !( $ascii >= 160 && $ascii <= 255) ) {
 
             return chr($ascii);
 
         }else{
 
+            // it's a "special" char
             if(isset($this->chrSpecialChars[$ascii])) {
                 return $this->chrSpecialChars[$ascii];
             }
 
-            $hex = dechex($ascii);
-
-            $pyHex = ((strlen($hex) === 1) ? '0' . $hex : $hex);
-
+            // when printable adds same padding and a \x like python
             if($printable) {
+                $hex = dechex($ascii);
+                $pyHex = ((strlen($hex) === 1) ? '0' . $hex : $hex);
                 return '\x' . $pyHex;
             }
 
-            return pack('H*', $pyHex); // binary version
+            // not printable binary version
+            return chr($ascii);
         }
+
     }
 }
