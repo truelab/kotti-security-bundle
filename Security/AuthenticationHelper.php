@@ -130,11 +130,13 @@ class AuthenticationHelper implements AuthenticationHelperInterface
      *
      * @param string $ticket
      *
+     * @param string $ip
+     *
      * @return array - identity []
      *
-     * @throws Exception\BadTicketException
+     * @throws BadTicketException
      */
-    public function parseTicket($ticket, $ip = null)
+    public function parseTicket($ticket, $ip = '0.0.0.0')
     {
         $ticket = trim($ticket, "\"");
 
@@ -170,14 +172,14 @@ class AuthenticationHelper implements AuthenticationHelperInterface
             $tokens = '';
             $userData = $data;
         }
-//
-//        $actual = $this->calculateDigest($ip, $timestamp, $userId, $tokens, $userData);
-//
-//        // Avoid timing attacks (see
-//        // http://seb.dbzteam.org/crypto/python-oauth-timing-hmac.pdf)
-//        if($actual !== $digest) {
-//            throw new BadTicketException(sprintf('Digest signature is not correct. actual: %s, expected: %s', $actual, $digest));
-//        }
+
+        $expected = $this->calculateDigest($ip, $timestamp, $userId, $tokens, $userData);
+
+        // Avoid timing attacks (see
+        // http://seb.dbzteam.org/crypto/python-oauth-timing-hmac.pdf)
+        if($expected !== $digest) {
+            throw new BadTicketException(sprintf('Digest signature is not correct. expected: %s, cookie digest: %s', $expected, $digest));
+        }
 
         $tokens = explode(',', $tokens);
 
@@ -218,8 +220,6 @@ class AuthenticationHelper implements AuthenticationHelperInterface
     }
 
     /**
-     * TODO: private
-     *
      * @param string $ip
      * @param string $timestamp
      *

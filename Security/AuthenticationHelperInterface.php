@@ -12,9 +12,11 @@ interface AuthenticationHelperInterface
     /**
      * @param string $ticket
      *
+     * @param string $ip
+     *
      * @return array
      */
-    public function parseTicket($ticket);
+    public function parseTicket($ticket, $ip = '0.0.0.0');
 
     /**
      * @param Request $request
