@@ -9,10 +9,14 @@ namespace Truelab\KottiSecurityBundle\Util\PyConverter;
 interface PyConverterInterface
 {
     /**
-     * @param int $ascii
-     * @param bool $printable
+     * Returns a specific char ("python like") for an ascii code
      *
-     * @return
+     * @param int $ascii - the ascii code
+     * @param bool $printable - if true return a printable version, default: false
+     *
+     * @return string - could contains binary data
+     *
+     * @return string
      */
     public function chr($ascii, $printable = false);
 }

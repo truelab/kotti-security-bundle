@@ -10,12 +10,25 @@ use Truelab\KottiSecurityBundle\Util\PyConverter\Exception\ChrValueErrorExceptio
  */
 class PyConverter implements PyConverterInterface
 {
-    protected $chrSpecialCases = [
+    /**
+     * @var array - python.chr "special" ascii chars
+     */
+    protected $chrSpecialChars = [
         9 => '\t',
         10 => '\n',
         13 => '\r'
     ];
 
+    /**
+     * Returns a specific char ("python like") for an ascii code
+     *
+     * @param int $ascii - the ascii code
+     * @param bool $printable - if true return a printable version, default: false
+     *
+     * @return string - could contains binary data when printable flag is false (default behavior)
+     *
+     * @throws ChrValueErrorException - when ascii code is out of range (0-256)
+     */
     public function chr($ascii, $printable = false)
     {
         if($ascii < 0 || $ascii > 255) {
@@ -28,8 +41,8 @@ class PyConverter implements PyConverterInterface
 
         }else{
 
-            if(in_array($ascii, array_keys($this->chrSpecialCases))) {
-                return $this->chrSpecialCases[$ascii];
+            if(isset($this->chrSpecialChars[$ascii])) {
+                return $this->chrSpecialChars[$ascii];
             }
 
             $hex = dechex($ascii);
