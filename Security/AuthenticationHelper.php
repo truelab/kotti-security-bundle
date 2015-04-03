@@ -39,12 +39,17 @@ class AuthenticationHelper implements AuthenticationHelperInterface
      */
     private $pyConverter;
 
-    public function __construct($secret, $cookieName = 'auth_tkt')
+    private $digestSizes = [
+        'sha512' => 128,
+        'md5' => 32
+    ];
+
+    public function __construct($secret, $cookieName = 'auth_tkt', $hashAlg = 'sha512')
     {
         $this->secret = $secret;
         $this->cookieName = $cookieName;
-        $this->hashAlg = 'md5';
-        $this->digestSize = 128;
+        $this->hashAlg = $hashAlg;
+        $this->digestSize = $this->digestSizes[$hashAlg];
     }
 
     public function setPyConverter(PyConverterInterface $pyConverter)
@@ -188,11 +193,28 @@ class AuthenticationHelper implements AuthenticationHelperInterface
     /**
      * Not implemented!!!
      * We could not make porting from python to php
-     * @throws \Exception
+     *
+     * @param string $ip
+     * @param string $timestamp
+     * @param string $userid
+     * @param string $tokens
+     * @param string $userData
+     *
+     * @return string|void
      */
-    private function calculateDigest()
+    public function calculateDigest($ip, $timestamp, $userid, $tokens, $userData)
     {
-        throw new \Exception('Not implemented method! This ticket is not secure!');
+        # Check to see if this is an IPv6 address
+        if (strpos($ip,':') !== false) {
+            $ipTimestamp = $ip . (string)((int)($timestamp));
+        }else{
+            $ipTimestamp = $this->encodeIpTimestamp($ip, $timestamp);
+        }
+
+        $data = $ipTimestamp . $this->secret . $userid . pack('H*','00') . $tokens .  pack('H*','00') . $userData;
+        $digest = hash($this->hashAlg, $data);
+
+        return hash($this->hashAlg, $digest . $this->secret);
     }
 
     /**
@@ -201,13 +223,15 @@ class AuthenticationHelper implements AuthenticationHelperInterface
      * @param string $ip
      * @param string $timestamp
      *
+     * @param bool $printable
+     *
      * @return string
      */
-    public function encodeIpTimestamp($ip, $timestamp)
+    public function encodeIpTimestamp($ip, $timestamp, $printable = false)
     {
-        $ipChars = join("", array_map(function ($ipPart){
+        $ipChars = join("", array_map(function ($ipPart) use ($printable) {
             $ipPart = (int) $ipPart;
-            return $this->pyConverter->chr($ipPart);
+            return $this->pyConverter->chr($ipPart, $printable);
         }, explode(".", $ip)));
 
         $t = (int) $timestamp;
@@ -218,8 +242,8 @@ class AuthenticationHelper implements AuthenticationHelperInterface
             ($t & 0xff)
         ];
 
-        $tsChars = join("",array_map(function ($tss) {
-          return $this->pyConverter->chr($tss);
+        $tsChars = join("",array_map(function ($tss) use ($printable) {
+          return $this->pyConverter->chr($tss, $printable);
         }, $ts));
 
         return $ipChars . $tsChars;

@@ -16,7 +16,7 @@ class PyConverter implements PyConverterInterface
         13 => '\r'
     ];
 
-    public function chr($ascii)
+    public function chr($ascii, $printable = false)
     {
         if($ascii < 0 || $ascii > 255) {
             throw new ChrValueErrorException('ValueError: chr() arg not in range(256)');
@@ -33,7 +33,14 @@ class PyConverter implements PyConverterInterface
             }
 
             $hex = dechex($ascii);
-            return '\x' . ((strlen($hex) === 1) ? '0' . $hex : $hex);
+
+            $pyHex = ((strlen($hex) === 1) ? '0' . $hex : $hex);
+
+            if($printable) {
+                return '\x' . $pyHex;
+            }
+
+            return pack('H*', $pyHex); // binary version
         }
     }
 }

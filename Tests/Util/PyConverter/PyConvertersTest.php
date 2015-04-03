@@ -28,12 +28,10 @@ class PyConvertersTest extends \PHPUnit_Framework_TestCase
         foreach($fixture as $i => $chrResult)
         {
             $expected = $chrResult;
-            $actual = $this->converter->chr($i);
+            $actual = $this->converter->chr($i, true);
             $this->assertEquals($expected, $actual);
         }
     }
-
-
 
     /**
      * @expectedException \Truelab\KottiSecurityBundle\Util\PyConverter\Exception\ChrValueErrorException

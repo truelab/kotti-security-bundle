@@ -27,7 +27,20 @@ interface AuthenticationHelperInterface
      * @param string $ip
      * @param string $timestamp
      *
+     * @param bool $printable
+     *
      * @return string
      */
-    public function encodeIpTimestamp($ip, $timestamp);
+    public function encodeIpTimestamp($ip, $timestamp, $printable = false);
+
+    /**
+     * @param string $ip
+     * @param string $timestamp
+     * @param string $userid
+     * @param string $tokens
+     * @param string $userData
+     *
+     * @return string
+     */
+    public function calculateDigest($ip, $timestamp, $userid, $tokens, $userData);
 }

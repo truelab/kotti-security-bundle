@@ -10,6 +10,9 @@ interface PyConverterInterface
 {
     /**
      * @param int $ascii
+     * @param bool $printable
+     *
+     * @return
      */
-    public function chr($ascii);
+    public function chr($ascii, $printable = false);
 }

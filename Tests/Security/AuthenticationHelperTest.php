@@ -24,7 +24,7 @@ class AuthenticationHelperTest extends \PHPUnit_Framework_TestCase
     private $cookieName = 'auth_tkt';
 
     private $ticketParts = [
-        // md5 digest
+        // sha512 digest
         'digest' => 'f5e4b03f95637b075f28ad874347781643b0b7f2aea4f7ed4fcd1e8c19479a40667f717476c86246a46fcafb95af1a2214fa3423fe96dec856a3c78b28356fbf',
 
         // hexadecimal timestamp
@@ -150,16 +150,24 @@ class AuthenticationHelperTest extends \PHPUnit_Framework_TestCase
 
     public function testEncodeIpTimestamp()
     {
-        $result = $this->helper->encodeIpTimestamp('0.0.0.0', '1427710482');
+        $result = $this->helper->encodeIpTimestamp('0.0.0.0', '1427710482', true);
         $expected = '\x00\x00\x00\x00U\x19"\x12';
         $this->assertEquals($expected, $result);
 
-        $result = $this->helper->encodeIpTimestamp('198.45.240.10','1427710482');
+        $result = $this->helper->encodeIpTimestamp('198.45.240.10','1427710482', true);
         $expected = '\xc6-\xf0\nU\x19"\x12';
         $this->assertEquals($expected, $result);
 
-        $result = $this->helper->encodeIpTimestamp('198.85.255.10','1437710482');
+        $result = $this->helper->encodeIpTimestamp('198.85.255.10','1437710482', true);
         $expected = '\xc6U\xff\nU\xb1\xb8\x92';
+        $this->assertEquals($expected, $result);
+    }
+
+    public function testCalculateDigest()
+    {
+        $result = $this->helper->calculateDigest('0.0.0.0', '1427710482', 'YWRtaW4=', '', 'userid_type:b64unicode');
+        $expected = '1ad057373be91d55b710382bc3122cf5106a9bf2ee6078f09f341d7d586e2ac08b859f5945a0784099ac8f5871c0637440fdc706079782d86531a9278fb9df8e';
+
         $this->assertEquals($expected, $result);
     }
 }
