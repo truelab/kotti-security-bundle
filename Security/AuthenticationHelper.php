@@ -11,6 +11,7 @@ use Truelab\KottiSecurityBundle\Security\Exception\BadTicketException;
 use Truelab\KottiSecurityBundle\Security\Exception\IdentifyException;
 use Truelab\KottiSecurityBundle\Security\Exception\IdentifyCookieNotFoundException;
 use Truelab\KottiSecurityBundle\Security\Exception\IdentifyParseTicketException;
+use Truelab\KottiSecurityBundle\Util\PyConverter\PyConverterInterface;
 
 /**
  * Class AuthenticationHelper
@@ -33,12 +34,22 @@ class AuthenticationHelper implements AuthenticationHelperInterface
      */
     private $hashAlg;
 
+    /**
+     * @var PyConverterInterface
+     */
+    private $pyConverter;
+
     public function __construct($secret, $cookieName = 'auth_tkt')
     {
         $this->secret = $secret;
         $this->cookieName = $cookieName;
         $this->hashAlg = 'md5';
         $this->digestSize = 128;
+    }
+
+    public function setPyConverter(PyConverterInterface $pyConverter)
+    {
+        $this->pyConverter = $pyConverter;
     }
 
     /**
@@ -184,4 +195,61 @@ class AuthenticationHelper implements AuthenticationHelperInterface
         throw new \Exception('Not implemented method! This ticket is not secure!');
     }
 
+    /**
+     * TODO: private
+     *
+     * @param string $ip
+     * @param string $timestamp
+     *
+     * @return string
+     */
+    public function encodeIpTimestamp($ip, $timestamp)
+    {
+        $ipChars = join("", array_map(function ($ipPart){
+            $ipPart = (int) $ipPart;
+            return $this->pyConverter->chr($ipPart);
+        }, explode(".", $ip)));
+
+        $t = (int) $timestamp;
+        $ts = [
+            ($t & 0xff000000) >> 24,
+            ($t & 0xff0000) >> 16,
+            ($t & 0xff00) >> 8,
+            ($t & 0xff)
+        ];
+
+        $tsChars = join("",array_map(function ($tss) {
+          return $this->pyConverter->chr($tss);
+        }, $ts));
+
+        return $ipChars . $tsChars;
+    }
+
+//    Python pyramid version
+//    # this function licensed under the MIT license (stolen from Paste)
+//    def encode_ip_timestamp(ip, timestamp):
+//        ip_chars = ''.join(map(chr, map(int, ip.split('.'))))
+//        t = int(timestamp)
+//        ts = ((t & 0xff000000) >> 24,
+//            (t & 0xff0000) >> 16,
+//            (t & 0xff00) >> 8,
+//            t & 0xff)
+//        ts_chars = ''.join(map(chr, ts))
+//    return bytes_(ip_chars + ts_chars)
+
+
+// Pdb debugging
+//[31/03/15 10:01:51] Davide Moro: da python? sì
+//[31/03/15 10:02:00] Davide Moro: metti una riga "import pdb; pdb.set_trace()"
+//[31/03/15 10:02:15] Davide Moro: riavvia
+//[31/03/15 10:02:22] Davide Moro: e poi devi usare i seguenti comandi:
+//[31/03/15 10:02:31] Davide Moro: l -> mostra dove ti trovi più o meno
+//[31/03/15 10:02:39] Davide Moro: l 112 -> ti mostra l'intorno della riga 112
+//[31/03/15 10:02:59] Davide Moro: c -> continua ed esci dal pdb, a meno che non l'abbia messo in un ciclo o becca un breakpoint
+//[31/03/15 10:03:18] Davide Moro: w -> mostra l'intero stack trace, in evidenza dove ti trovi
+//[31/03/15 10:03:28] Davide Moro: n -> next (non entra dentro le funzioni)
+//[31/03/15 10:03:37] Davide Moro: s -> step into (come next, ma entra nelle funzioni)
+//[31/03/15 10:04:05] Davide Moro: u -> sali nello stack per vedere sopra chi ha chiamato la tua func
+//[31/03/15 10:04:18] Davide Moro: d -> down, torni giù di una posizione nello stack
+//[31/03/15 10:04:33] Davide Moro: b 215 -> imposta un breakpoint alla linea 215
 }

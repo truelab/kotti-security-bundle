@@ -6,6 +6,7 @@ use Symfony\Component\HttpFoundation\Cookie;
 use Truelab\KottiSecurityBundle\Security\AuthenticationHelper;
 use Truelab\KottiSecurityBundle\Security\AuthenticationHelperInterface;
 use Truelab\KottiSecurityBundle\Security\Exception\BadTicketException;
+use Truelab\KottiSecurityBundle\Util\PyConverter\PyConverter;
 
 /**
  * Class AuthenticationHelperTest
@@ -45,6 +46,7 @@ class AuthenticationHelperTest extends \PHPUnit_Framework_TestCase
     {
         $this->ticket = $this->createTicket();
         $this->helper = new AuthenticationHelper($this->secret, $this->cookieName);
+        $this->helper->setPyConverter(new PyConverter());
     }
 
     protected function createTicket( $digest = null, $timestamp = null, $userId = null, $delimiter = null, $extra = null )
@@ -144,5 +146,20 @@ class AuthenticationHelperTest extends \PHPUnit_Framework_TestCase
         $identity = $this->helper->identify($this->getRequestMock());
         $this->assertInstanceOf('\DateTime', $identity->getDateTimestamp());
         $this->assertEquals($this->expectedTicketTimestamp, $identity->getDateTimestamp()->getTimestamp());
+    }
+
+    public function testEncodeIpTimestamp()
+    {
+        $result = $this->helper->encodeIpTimestamp('0.0.0.0', '1427710482');
+        $expected = '\x00\x00\x00\x00U\x19"\x12';
+        $this->assertEquals($expected, $result);
+
+        $result = $this->helper->encodeIpTimestamp('198.45.240.10','1427710482');
+        $expected = '\xc6-\xf0\nU\x19"\x12';
+        $this->assertEquals($expected, $result);
+
+        $result = $this->helper->encodeIpTimestamp('198.85.255.10','1437710482');
+        $expected = '\xc6U\xff\nU\xb1\xb8\x92';
+        $this->assertEquals($expected, $result);
     }
 }

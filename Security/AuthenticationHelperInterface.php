@@ -22,4 +22,12 @@ interface AuthenticationHelperInterface
      * @return AuthenticationIdentityInterface|null
      */
     public function identify(Request $request);
+
+    /**
+     * @param string $ip
+     * @param string $timestamp
+     *
+     * @return string
+     */
+    public function encodeIpTimestamp($ip, $timestamp);
 }
