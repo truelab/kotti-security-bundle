@@ -68,7 +68,6 @@ class AuthenticationHelper implements AuthenticationHelperInterface
      */
     public function identify(Request $request)
     {
-
         if($request->cookies->has($this->cookieName)) {
 
             $cookie = $this->createSignedCookie($request->cookies->get($this->cookieName));
@@ -82,7 +81,7 @@ class AuthenticationHelper implements AuthenticationHelperInterface
         }
 
         try{
-           $result = $this->parseTicket($cookie->getValue());
+           $result = $this->parseTicket($cookie->getValue(), $request->getClientIp());
         }catch(BadTicketException $e) {
             throw new IdentifyParseTicketException('Something went wrong while parsing ticket.', 0, $e);
         }
@@ -138,6 +137,8 @@ class AuthenticationHelper implements AuthenticationHelperInterface
      */
     public function parseTicket($ticket, $ip = '0.0.0.0')
     {
+        $ip = $ip === NULL ? '0.0.0.0' : $ip;
+
         $ticket = trim($ticket, "\"");
 
         // extract $digest
@@ -261,19 +262,4 @@ class AuthenticationHelper implements AuthenticationHelperInterface
 //        ts_chars = ''.join(map(chr, ts))
 //    return bytes_(ip_chars + ts_chars)
 
-
-// Pdb debugging
-//[31/03/15 10:01:51] Davide Moro: da python? sì
-//[31/03/15 10:02:00] Davide Moro: metti una riga "import pdb; pdb.set_trace()"
-//[31/03/15 10:02:15] Davide Moro: riavvia
-//[31/03/15 10:02:22] Davide Moro: e poi devi usare i seguenti comandi:
-//[31/03/15 10:02:31] Davide Moro: l -> mostra dove ti trovi più o meno
-//[31/03/15 10:02:39] Davide Moro: l 112 -> ti mostra l'intorno della riga 112
-//[31/03/15 10:02:59] Davide Moro: c -> continua ed esci dal pdb, a meno che non l'abbia messo in un ciclo o becca un breakpoint
-//[31/03/15 10:03:18] Davide Moro: w -> mostra l'intero stack trace, in evidenza dove ti trovi
-//[31/03/15 10:03:28] Davide Moro: n -> next (non entra dentro le funzioni)
-//[31/03/15 10:03:37] Davide Moro: s -> step into (come next, ma entra nelle funzioni)
-//[31/03/15 10:04:05] Davide Moro: u -> sali nello stack per vedere sopra chi ha chiamato la tua func
-//[31/03/15 10:04:18] Davide Moro: d -> down, torni giù di una posizione nello stack
-//[31/03/15 10:04:33] Davide Moro: b 215 -> imposta un breakpoint alla linea 215
 }

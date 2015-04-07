@@ -35,17 +35,17 @@ class PyConverter implements PyConverterInterface
             throw new ChrValueErrorException('ValueError: chr() arg not in range(256)');
         }
 
+        // it's a "special" char
+        if(isset($this->chrSpecialChars[$ascii])) {
+            return $this->chrSpecialChars[$ascii];
+        }
+
         // it's printable ascii char and not equal to ?
         if(ctype_print(chr($ascii)) && !( $ascii >= 160 && $ascii <= 255) ) {
 
             return chr($ascii);
 
         }else{
-
-            // it's a "special" char
-            if(isset($this->chrSpecialChars[$ascii])) {
-                return $this->chrSpecialChars[$ascii];
-            }
 
             // when printable adds same padding and a \x like python
             if($printable) {
