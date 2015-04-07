@@ -2,6 +2,7 @@
 
 namespace Truelab\KottiSecurityBundle\Security;
 
+use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Request;
 use Truelab\KottiSecurityBundle\Security\Cookie\SignedCookie;
 use Truelab\KottiSecurityBundle\Security\Cookie\SignedCookieInterface;
@@ -57,6 +58,11 @@ class AuthenticationHelper implements AuthenticationHelperInterface
         $this->pyConverter = $pyConverter;
     }
 
+    public function canIdentify(Request $request)
+    {
+        return $request->cookies->has($this->cookieName);
+    }
+
     /**
      * Return an @see AuthenticationIdentityInterface with authentication information, or throws
      * exceptions if no valid auth_tkt is attached to Request
@@ -68,20 +74,24 @@ class AuthenticationHelper implements AuthenticationHelperInterface
      */
     public function identify(Request $request)
     {
-        if($request->cookies->has($this->cookieName)) {
-
-            $cookie = $this->createSignedCookie($request->cookies->get($this->cookieName));
-
-            if($cookie->decode() === null) {
-                throw new IdentifyException('Decode signed cookie fails, cookie should be not signed');
-            }
-
+        if($this->canIdentify($request)) {
+            $cookie = $request->cookies->get($this->cookieName);
         }else{
             throw new IdentifyCookieNotFoundException(sprintf('Cookie with key = "%s" was not found in the current request', $this->cookieName));
         }
 
         try{
-           $result = $this->parseTicket($cookie->getValue(), $request->getClientIp());
+
+            if($cookie instanceof Cookie) {
+                $cookieValue = $cookie->getValue();
+            }elseif(is_string($cookie)) {
+                $cookieValue = $cookie;
+            }else{
+                throw new IdentifyException('Unsupported cookie format');
+            }
+
+            $result = $this->parseTicket($cookieValue, $request->getClientIp());
+
         }catch(BadTicketException $e) {
             throw new IdentifyParseTicketException('Something went wrong while parsing ticket.', 0, $e);
         }
@@ -101,16 +111,6 @@ class AuthenticationHelper implements AuthenticationHelperInterface
         return $identity;
     }
 
-    /**
-     * Create a SignedCookieInterface object from a simple cookie
-     *
-     * @param $cookie
-     * @return SignedCookieInterface
-     */
-    protected function createSignedCookie($cookie)
-    {
-        return SignedCookie::createFromCookie($this->secret, $cookie);
-    }
 
     /**
      *
@@ -137,7 +137,7 @@ class AuthenticationHelper implements AuthenticationHelperInterface
      */
     public function parseTicket($ticket, $ip = '0.0.0.0')
     {
-        $ip = $ip === NULL ? '0.0.0.0' : $ip;
+        $ip = $ip === NULL || $ip === '127.0.0.1' ? '0.0.0.0' : $ip;
 
         $ticket = trim($ticket, "\"");
 

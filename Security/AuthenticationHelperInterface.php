@@ -26,6 +26,13 @@ interface AuthenticationHelperInterface
     public function identify(Request $request);
 
     /**
+     * @param Request $request
+     *
+     * @return bool
+     */
+    public function canIdentify(Request $request);
+
+    /**
      * @param string $ip
      * @param string $timestamp
      *

@@ -20,12 +20,40 @@
             <argument type="service" id="truelab_kotti_security.user_repository" />
         </service>
 
+        <!-- UTIL PY CONVERTER -->
+        <service id="truelab_kotti_security.util.py_converter"
+                 class="Truelab\KottiSecurityBundle\Util\PyConverter\PyConverter">
+        </service>
+
         <!-- AUTHENTICATION HELPER -->
         <service id="truelab_kotti_security.authentication_helper"
                  class="Truelab\KottiSecurityBundle\Security\AuthenticationHelper">
             <argument>%truelab_kotti_security.auth.secret%</argument>
             <argument>%truelab_kotti_security.auth.cookie_name%</argument>
             <argument>%truelab_kotti_security.auth.hash_alg%</argument>
+            <call method="setPyConverter">
+                <argument type="service" id="truelab_kotti_security.util.py_converter" />
+            </call>
+        </service>
+
+        <!-- SECURITY USER PROVIDER -->
+        <service id="truelab_kotti_security.user_provider"
+                 class="Truelab\KottiSecurityBundle\Security\User\KottiUserProvider">
+            <argument type="service" id="truelab_kotti_security.user_manager" />
+        </service>
+
+        <!-- SECURITY AUTHENTICATION PROVIDER -->
+        <service id="truelab_kotti_security.authentication.provider"
+                 class="Truelab\KottiSecurityBundle\Security\Authentication\Provider\KottiProvider" public="false">
+            <argument /> <!-- User Provider -->
+        </service>
+
+        <!-- SECURITY AUTHENTICATION FIREWALL LISTENER -->
+        <service id="truelab_kotti_security.authentication.listener"
+                 class="Truelab\KottiSecurityBundle\Security\Firewall\KottiSecurityListener" public="false">
+            <argument type="service" id="truelab_kotti_security.authentication_helper" />
+            <argument type="service" id="security.token_storage"/>
+            <argument type="service" id="security.authentication.manager" />
         </service>
 
     </services>
