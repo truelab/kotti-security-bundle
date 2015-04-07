@@ -4,13 +4,22 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
-    <!--
+
     <services>
-        <service id="truelab_kotti_security.example" class="Truelab\KottiSecurityBundle\Example">
-            <argument type="service" id="service_id" />
-            <argument>plain_value</argument>
-            <argument>%parameter_name%</argument>
+
+        <!-- USER REPOSITORY -->
+        <service id="truelab_kotti_security.user_repository"
+                 class="Doctrine\ORM\EntityRepository"
+                 factory-service="doctrine.orm.default_entity_manager"
+                 factory-method="getRepository">
+                <argument>TruelabKottiSecurityBundle:User</argument>
         </service>
+
+        <!-- USER MANAGER -->
+        <service id="truelab_kotti_security.user_manager" class="Truelab\KottiSecurityBundle\Model\UserManager">
+            <argument type="service" id="truelab_kotti_security.user_repository" />
+        </service>
+
     </services>
-    -->
+
 </container>

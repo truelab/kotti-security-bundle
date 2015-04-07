@@ -1,0 +1,24 @@
+framework:
+    secret:          Oh! Oh! Oh!
+    router:          { resource: "%kernel.root_dir%/config/routing.yml" }
+    form:            true
+    csrf_protection: true
+    session:         ~
+    default_locale:  en
+    translator:      { fallback: en }
+    profiler:        { only_exceptions: false }
+
+#
+#
+# DOCTRINE
+#
+#
+doctrine:
+    dbal:
+        driver:   "pdo_sqlite"
+        path: "%kernel.root_dir%/data/Kotti.db"
+        charset:  UTF8
+        logging: true
+    orm:
+        auto_mapping: true
+        default_entity_manager: default
