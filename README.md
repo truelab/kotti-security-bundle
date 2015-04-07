@@ -14,74 +14,78 @@ A symfony2 bundle that provides "security" integration, admin features for kotti
 
 Adds this to your composer.json and run ```composer update truelab/kotti-security-bundle```:
 
-    {
-        "require": {
-            // ...
-            "truelab/kotti-security-bundle" : "dev-dev"
-        },
-        "repositories" : [
-            // ...
-            { "type":"git", "url":"https://github.com/truelab/kotti-security-bundle.git" }
-        ]
-    
-        //...
-    }    
+```json
+{
+    "require": {
+        "truelab/kotti-security-bundle" : "dev-dev"
+    },
+    "repositories" : [
+        { "type":"git", "url":"https://github.com/truelab/kotti-security-bundle.git" }
+    ]
+}    
+```    
 
 Updates your AppKernel.php: 
 
-    <?php
-    // ...
-    class AppKernel extends Kernel
+```php
+<?php
+
+use Symfony\Component\HttpKernel\Kernel;
+use Symfony\Component\Config\Loader\LoaderInterface;
+
+class AppKernel extends Kernel
+{
+    public function registerBundles()
     {
-        public function registerBundles()
-        {
-            $bundles = array(
-                // ...
-                new Truelab\KottiSecurityBundle\TruelabKottiSecurityBundle(),
-            );
-            
-            return $bundles;
-        }
+        $bundles = array(
+            // ...
+            new Truelab\KottiSecurityBundle\TruelabKottiSecurityBundle(),
+        );
         
-        // ..
+        return $bundles;
     }
+}
+```    
     
 Adds this to to your configuration:
 
-
-    # app/config/config.yml
-    truelab_kotti_security:
-        auth:
-            secret: your_kotti_pyramid_authentication_secret
-
+```yaml
+# app/config/config.yml
+truelab_kotti_security:
+    auth:
+        secret: your_kotti_pyramid_authentication_secret
+```
 
 
 or better, use a parameter:
 
-    # app/config/config.yml
-    truelab_kotti_security:
-        auth:
+```yaml
+# app/config/config.yml
+truelab_kotti_security:
+    auth:
         secret: %kotti.authentication_secret%
-
+```
 
 ## Usage
 
-To activate and use the firewall that provides authentication reading the ```auth_tkt``` cookie adds ```kotti``` to one of your firewall configurations.
+To activate and use the firewall that provides authentication reading the ```auth_tkt``` cookie, 
+adds ```kotti``` key to a firewall config.
 
-    # app/config/security.yml
-    // ...
-    
+```yaml
+# app/config/security.yml
+security:
+    # ...
     firewalls:
-        # default firewall
-        default:
+        kotti_firewall:
             anonymous: ~         # permits anonymous user
             kotti: ~             # activates kotti authentication provider
             stateless: true      # !!!important is stateless, we rely only on the presence of a valid auth_tkt cookie
-
+```
 
 ## Configuration reference
 
-```
+```yaml
+
 truelab_kotti_security:
     auth:
         secret: KottiPyramidAuthenticationSecretValue  # !!!required
