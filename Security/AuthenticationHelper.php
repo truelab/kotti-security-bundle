@@ -46,9 +46,9 @@ class AuthenticationHelper implements AuthenticationHelperInterface
 
     public function __construct($secret, $cookieName = 'auth_tkt', $hashAlg = 'sha512')
     {
-        $this->secret = $secret;
+        $this->secret     = $secret;
         $this->cookieName = $cookieName;
-        $this->hashAlg = $hashAlg;
+        $this->hashAlg    = $hashAlg;
         $this->digestSize = $this->digestSizes[$hashAlg];
     }
 
@@ -249,17 +249,4 @@ class AuthenticationHelper implements AuthenticationHelperInterface
 
         return $ipChars . $tsChars;
     }
-
-//    Python pyramid version
-//    # this function licensed under the MIT license (stolen from Paste)
-//    def encode_ip_timestamp(ip, timestamp):
-//        ip_chars = ''.join(map(chr, map(int, ip.split('.'))))
-//        t = int(timestamp)
-//        ts = ((t & 0xff000000) >> 24,
-//            (t & 0xff0000) >> 16,
-//            (t & 0xff00) >> 8,
-//            t & 0xff)
-//        ts_chars = ''.join(map(chr, ts))
-//    return bytes_(ip_chars + ts_chars)
-
 }

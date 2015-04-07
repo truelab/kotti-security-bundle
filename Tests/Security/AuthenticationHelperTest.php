@@ -5,7 +5,6 @@ namespace Truelab\KottiSecurityBundle\Tests\Security;
 use Symfony\Component\HttpFoundation\Cookie;
 use Truelab\KottiSecurityBundle\Security\AuthenticationHelper;
 use Truelab\KottiSecurityBundle\Security\AuthenticationHelperInterface;
-use Truelab\KottiSecurityBundle\Security\Exception\BadTicketException;
 use Truelab\KottiSecurityBundle\Util\PyConverter\PyConverter;
 
 /**

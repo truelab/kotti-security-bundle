@@ -20,6 +20,14 @@
             <argument type="service" id="truelab_kotti_security.user_repository" />
         </service>
 
+        <!-- AUTHENTICATION HELPER -->
+        <service id="truelab_kotti_security.authentication_helper"
+                 class="Truelab\KottiSecurityBundle\Security\AuthenticationHelper">
+            <argument>%truelab_kotti_security.auth.secret%</argument>
+            <argument>%truelab_kotti_security.auth.cookie_name%</argument>
+            <argument>%truelab_kotti_security.auth.hash_alg%</argument>
+        </service>
+
     </services>
 
 </container>

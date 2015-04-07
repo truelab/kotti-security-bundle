@@ -22,6 +22,10 @@ class TruelabKottiSecurityExtension extends Extension
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
+        $container->setParameter('truelab_kotti_security.auth.secret', $config['auth']['secret']);
+        $container->setParameter('truelab_kotti_security.auth.cookie_name', $config['auth']['cookie_name']);
+        $container->setParameter('truelab_kotti_security.auth.hash_alg', $config['auth']['hash_alg']);
+
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.xml');
     }
