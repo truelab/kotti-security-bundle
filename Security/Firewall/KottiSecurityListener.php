@@ -45,8 +45,7 @@ class KottiSecurityListener implements ListenerInterface
         try{
             $identity = $this->authenticationHelper->identify($request);
         }catch(IdentifyException $e) {
-            var_dump(get_class($e));
-            die($e->getMessage());
+            // FIXME LOGGER
             return;
         }
 
@@ -58,6 +57,8 @@ class KottiSecurityListener implements ListenerInterface
             $this->tokenStorage->setToken($authToken);
             return;
         } catch (AuthenticationException $failed) {
+
+            // FIXME LOGGER
             // ... you might log something here
 
             // To deny the authentication clear the token. This will redirect to the login page.

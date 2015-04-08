@@ -12,7 +12,7 @@
                  class="Doctrine\ORM\EntityRepository"
                  factory-service="doctrine.orm.default_entity_manager"
                  factory-method="getRepository">
-                <argument>TruelabKottiSecurityBundle:User</argument>
+                <argument>Truelab\KottiSecurityBundle\Entity\User</argument>
         </service>
 
         <!-- USER MANAGER -->
@@ -44,7 +44,8 @@
 
         <!-- SECURITY AUTHENTICATION PROVIDER -->
         <service id="truelab_kotti_security.authentication.provider"
-                 class="Truelab\KottiSecurityBundle\Security\Authentication\Provider\KottiProvider" public="false">
+                 class="Truelab\KottiSecurityBundle\Security\Authentication\Provider\KottiProvider"
+                 public="false">
             <argument /> <!-- User Provider -->
         </service>
 
@@ -54,6 +55,29 @@
             <argument type="service" id="truelab_kotti_security.authentication_helper" />
             <argument type="service" id="security.token_storage"/>
             <argument type="service" id="security.authentication.manager" />
+        </service>
+
+        <!-- KOTTI SECURITY CONTEXT -->
+        <service id="truelab_kotti_security.kotti_security_context"
+            class="Truelab\KottiSecurityBundle\Security\KottiSecurityContext"/>
+
+        <!-- KOTTI SECURITY CONTEXT LISTENER -->
+        <service id="truelab_kotti_security.kotti_security_context_listener"
+                 class="Truelab\KottiSecurityBundle\Security\KottiSecurityContextListener">
+            <argument type="service" id="truelab_kotti_security.authentication_helper" />
+            <argument type="service" id="truelab_kotti_security.user_manager" />
+            <argument type="service" id="truelab_kotti_security.kotti_security_context" />
+            <tag name="kernel.event_listener" event="kernel.request" method="onKernelRequest"
+                 priority="34" /> <!-- before router listener -->
+        </service>
+
+        <!-- STATE DEFAULT CRITERIA -->
+        <service id="truelab_kotti_security.repository.state_default_criteria"
+            class="Truelab\KottiSecurityBundle\Repository\Criteria\StateDefaultCriteria">
+            <call method="setKottiSecurityContext">
+                <argument type="service" id="truelab_kotti_security.kotti_security_context" />
+            </call>
+            <tag name="truelab_kotti_model.default_criteria" />
         </service>
 
     </services>
