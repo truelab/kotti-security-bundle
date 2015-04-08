@@ -16,7 +16,7 @@
         "doctrine/doctrine-bundle": "~1.3",
         "doctrine/orm": "~2.3",
         "sensio/framework-extra-bundle": "~3.0",
-        "truelab/kotti-model-bundle": "~1.0"
+        "truelab/kotti-model-bundle": "~0.4"
     },
     "require-dev": {
         "symfony/symfony": "2.6.*",
