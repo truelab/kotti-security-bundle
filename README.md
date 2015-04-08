@@ -82,6 +82,20 @@ security:
             stateless: true      # !!!important is stateless, we rely only on the presence of a valid auth_tkt cookie
 ```
 
+### AdminBar
+
+To render a simple bootstrap based admin bar use the ```render``` controller method.
+ 
+eg.
+
+```twig
+# mylayout.html.twig
+
+{% block admin_bar %}
+    {{ render(controller('TruelabKottiSecurityBundle:AdminBar:view') }}
+{% endblock %}
+```
+
 ## Configuration reference
 
 ```yaml
