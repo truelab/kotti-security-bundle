@@ -31,6 +31,7 @@
             <argument>%truelab_kotti_security.auth.secret%</argument>
             <argument>%truelab_kotti_security.auth.cookie_name%</argument>
             <argument>%truelab_kotti_security.auth.hash_alg%</argument>
+            <argument>%truelab_kotti_security.auth.include_ip%</argument>
             <call method="setPyConverter">
                 <argument type="service" id="truelab_kotti_security.util.py_converter" />
             </call>

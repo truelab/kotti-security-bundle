@@ -73,7 +73,8 @@ class ConfigurationTest extends AbstractConfigurationTestCase
             'auth' => [
                 'secret' => 'qwerty',
                 'hash_alg' => 'sha512',
-                'cookie_name' => 'auth_tkt'
+                'cookie_name' => 'auth_tkt',
+                'include_ip' => false
             ]
         ];
 

@@ -59,6 +59,12 @@ class Configuration implements ConfigurationInterface
                             ->treatFalseLike($defaultConfig['auth']['hash_alg'])
                             ->defaultValue($defaultConfig['auth']['hash_alg'])
                         ->end()
+                        ->scalarNode('include_ip')
+                            ->cannotBeEmpty()
+                            ->treatNullLike(false)
+                            ->treatFalseLike($defaultConfig['auth']['include_ip'])
+                            ->defaultValue($defaultConfig['auth']['include_ip'])
+                        ->end()
                     ->end()
                 ->end()
             ->end();
@@ -72,7 +78,8 @@ class Configuration implements ConfigurationInterface
         return [
             'auth' => [
                 'hash_alg' => 'sha512',
-                'cookie_name' => 'auth_tkt'
+                'cookie_name' => 'auth_tkt',
+                'include_ip' => false
             ]
         ];
     }

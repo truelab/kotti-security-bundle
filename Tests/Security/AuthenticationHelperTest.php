@@ -14,7 +14,7 @@ use Truelab\KottiSecurityBundle\Util\PyConverter\PyConverter;
 class AuthenticationHelperTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var AuthenticationHelperInterface
+     * @var AuthenticationHelperInterface|TestableAuthenticationHelper
      */
     private $helper;
 
@@ -44,7 +44,7 @@ class AuthenticationHelperTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->ticket = $this->createTicket();
-        $this->helper = new AuthenticationHelper($this->secret, $this->cookieName);
+        $this->helper = new TestableAuthenticationHelper($this->secret, $this->cookieName);
         $this->helper->setPyConverter(new PyConverter());
     }
 
@@ -168,5 +168,28 @@ class AuthenticationHelperTest extends \PHPUnit_Framework_TestCase
         $expected = '1ad057373be91d55b710382bc3122cf5106a9bf2ee6078f09f341d7d586e2ac08b859f5945a0784099ac8f5871c0637440fdc706079782d86531a9278fb9df8e';
 
         $this->assertEquals($expected, $result);
+    }
+
+    public function testIncludeIpWorksAsExpected()
+    {
+        $this->helper->setIncludeIp(false);
+        $result = $this->helper->calculateDigest('198.0.1.0', '1427710482', 'YWRtaW4=', '', 'userid_type:b64unicode');
+
+        // expected is a digest calculated on ip = 0.0.0.0
+        $expected = '1ad057373be91d55b710382bc3122cf5106a9bf2ee6078f09f341d7d586e2ac08b859f5945a0784099ac8f5871c0637440fdc706079782d86531a9278fb9df8e';
+        $this->assertEquals($expected, $result);
+
+        $this->helper->setIncludeIp(true);
+        $actual = $this->helper->calculateDigest('198.0.1.0', '1427710482', 'YWRtaW4=', '', 'userid_type:b64unicode');
+        $this->assertNotEquals($result, $actual);
+    }
+}
+
+
+class TestableAuthenticationHelper extends AuthenticationHelper
+{
+    public function setIncludeIp($includeIp)
+    {
+        $this->includeIp = $includeIp;
     }
 }

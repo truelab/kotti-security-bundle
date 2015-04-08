@@ -23,34 +23,44 @@ class AuthenticationHelper implements AuthenticationHelperInterface
     /**
      * @var string
      */
-    private $secret;
+    protected $secret;
 
     /**
      * @var string
      */
-    private $cookieName;
+    protected $cookieName;
 
     /**
      * @var string
      */
-    private $hashAlg;
+    protected $hashAlg;
 
     /**
      * @var PyConverterInterface
      */
-    private $pyConverter;
+    protected $pyConverter;
 
-    private $digestSizes = [
+    /**
+     * @var bool $includeIp
+     */
+    protected $includeIp;
+
+    /**
+     * Hash Alg/Digest size map, supports only md5 and sha512
+     * @var array
+     */
+    protected $digestSizes = [
         'sha512' => 128,
         'md5' => 32
     ];
 
-    public function __construct($secret, $cookieName = 'auth_tkt', $hashAlg = 'sha512')
+    public function __construct($secret, $cookieName = 'auth_tkt', $hashAlg = 'sha512', $includeIp = false )
     {
         $this->secret     = $secret;
         $this->cookieName = $cookieName;
         $this->hashAlg    = $hashAlg;
         $this->digestSize = $this->digestSizes[$hashAlg];
+        $this->includeIp  = $includeIp;
     }
 
     public function setPyConverter(PyConverterInterface $pyConverter)
@@ -90,7 +100,8 @@ class AuthenticationHelper implements AuthenticationHelperInterface
                 throw new IdentifyException('Unsupported cookie format');
             }
 
-            $result = $this->parseTicket($cookieValue, $request->getClientIp());
+
+            $result = $this->parseTicket($cookieValue, !$this->iHaveToIncludeIp() ? '0.0.0.0' : $request->getClientIp());
 
         }catch(BadTicketException $e) {
             throw new IdentifyParseTicketException('Something went wrong while parsing ticket.', 0, $e);
@@ -137,7 +148,7 @@ class AuthenticationHelper implements AuthenticationHelperInterface
      */
     public function parseTicket($ticket, $ip = '0.0.0.0')
     {
-        $ip = $ip === NULL || $ip === '127.0.0.1' ? '0.0.0.0' : $ip;
+        $ip = !$this->iHaveToIncludeIp() || $ip === NULL ? '0.0.0.0' : $ip;
 
         $ticket = trim($ticket, "\"");
 
@@ -207,6 +218,8 @@ class AuthenticationHelper implements AuthenticationHelperInterface
      */
     public function calculateDigest($ip, $timestamp, $userid, $tokens, $userData)
     {
+        $ip = !$this->iHaveToIncludeIp() ? '0.0.0.0' : $ip;
+
         # Check to see if this is an IPv6 address
         if (strpos($ip,':') !== false) {
             $ipTimestamp = $ip . (string)((int)($timestamp));
@@ -248,5 +261,13 @@ class AuthenticationHelper implements AuthenticationHelperInterface
         }, $ts));
 
         return $ipChars . $tsChars;
+    }
+
+    /**
+     * @return bool
+     */
+    protected function iHaveToIncludeIp()
+    {
+        return $this->includeIp !== false;
     }
 }
