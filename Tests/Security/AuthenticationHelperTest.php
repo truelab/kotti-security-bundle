@@ -93,6 +93,15 @@ class AuthenticationHelperTest extends \PHPUnit_Framework_TestCase
         $this->helper->parseTicket($ticket);
     }
 
+    /**
+     * @expectedException \Truelab\KottiSecurityBundle\Security\Exception\BadTicketUnexpectedDigestException
+     */
+    public function testParseTicketThrowExceptionWrongDigest()
+    {
+        $ticket = $this->createTicket('1ad057373be91d55b710382bc3122cf5106a9bf2ee6078f09f341d7d586e2ac08b859f5945a0784099ac8f5871c0637440fdc706079782d86531a9278fb9df8e');
+        $this->helper->parseTicket($ticket);
+    }
+
     public function testParseTicketResultContainsRequiredKeys()
     {
         $result = $this->helper->parseTicket($this->ticket);

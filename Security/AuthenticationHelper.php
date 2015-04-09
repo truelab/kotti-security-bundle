@@ -9,6 +9,7 @@ use Truelab\KottiSecurityBundle\Security\Cookie\SignedCookieInterface;
 
 use Truelab\KottiSecurityBundle\Security\Exception\BadTicketException;
 
+use Truelab\KottiSecurityBundle\Security\Exception\BadTicketUnexpectedDigestException;
 use Truelab\KottiSecurityBundle\Security\Exception\IdentifyException;
 use Truelab\KottiSecurityBundle\Security\Exception\IdentifyCookieNotFoundException;
 use Truelab\KottiSecurityBundle\Security\Exception\IdentifyParseTicketException;
@@ -196,7 +197,18 @@ class AuthenticationHelper implements AuthenticationHelperInterface
         // Avoid timing attacks (see
         // http://seb.dbzteam.org/crypto/python-oauth-timing-hmac.pdf)
         if($expected !== $digest) {
-            throw new BadTicketException(sprintf('Digest signature is not correct. expected: %s, cookie digest: %s', $expected, $digest));
+            throw new BadTicketUnexpectedDigestException(sprintf(
+                    'Digest signature is not correct. expected digest: "%s", cookie digest: "%s", ticket: "%s", ip: "%s", timestamp: "%s", userId: "%s", tokens: "%s", userData: "%s"',
+                    $expected,
+                    $digest,
+                    $ticket,
+                    $ip,
+                    $timestamp,
+                    $userId,
+                    $tokens,
+                    $userData
+                )
+            );
         }
 
         $tokens = explode(',', $tokens);

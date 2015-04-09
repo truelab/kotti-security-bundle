@@ -40,9 +40,7 @@ class KottiSecurityContextListener
         $request = $event->getRequest();
 
         if(!$this->authenticationHelper->canIdentify($request)) {
-            $this->logger->debug('KottiSecurityContextListener can\'t identify current request', [
-                'request' => $request->__toString()
-            ]);
+            $this->logger->debug('KottiSecurityContextListener can\'t identify current request');
             return;
         }
 
@@ -55,9 +53,7 @@ class KottiSecurityContextListener
             }
             return;
         }catch (IdentifyException $e) {
-            $this->logger->error($e, [
-                'request' => $request->__toString()
-            ]);
+            $this->logger->error($e);
             return;
         }
     }
