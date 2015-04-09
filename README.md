@@ -74,12 +74,19 @@ adds ```kotti``` key to a firewall config.
 ```yaml
 # app/config/security.yml
 security:
+    # declare kotti user provider (optional but recommended)
+    providers:
+        the_kotti_user_provider:
+            id: truelab_kotti_security.user_provider 
     # ...
     firewalls:
         kotti_firewall:
             anonymous: ~         # permits anonymous user
             kotti: ~             # activates kotti authentication provider
             stateless: true      # !!!important is stateless, we rely only on the presence of a valid auth_tkt cookie
+            # use kotti user provider for this firewall 
+            # to have a Truelab\KottiSecurityBundle\Entity\User instance as authenticated user
+            provider: the_kotti_user_provider 
 ```
 
 ### AdminBar

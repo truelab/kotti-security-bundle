@@ -37,7 +37,9 @@
 
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
-                    <li><a href="#"><small>Signed in as</small> {{ admin.username }}</a></li>
+                    <li><a href="{{ backend_base_url }}" target="_blank">
+                            <small>Signed in as</small> {{ admin.title is defined ? admin.title : admin.username }}</a>
+                    </li>
                 </ul>
             </div>
 
