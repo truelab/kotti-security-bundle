@@ -68,8 +68,12 @@
             <argument type="service" id="truelab_kotti_security.authentication_helper" />
             <argument type="service" id="truelab_kotti_security.user_manager" />
             <argument type="service" id="truelab_kotti_security.kotti_security_context" />
+            <argument type="service" id="logger" />
+
             <tag name="kernel.event_listener" event="kernel.request" method="onKernelRequest"
                  priority="34" /> <!-- before router listener -->
+
+            <tag name="monolog.logger" channel="kotti.security" />
         </service>
 
         <!-- STATE DEFAULT CRITERIA -->

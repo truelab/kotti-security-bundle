@@ -11,6 +11,8 @@ class AppKernel extends Kernel
             new Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
             new Symfony\Bundle\SecurityBundle\SecurityBundle(),
             new Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
+            new Symfony\Bundle\MonologBundle\MonologBundle(),
+            
             new Truelab\KottiSecurityBundle\TruelabKottiSecurityBundle()
         );
     }

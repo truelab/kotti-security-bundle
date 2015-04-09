@@ -1,6 +1,7 @@
 <?php
 
 namespace Truelab\KottiSecurityBundle\Security;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Truelab\KottiSecurityBundle\Security\Exception\IdentifyException;
@@ -21,16 +22,27 @@ class KottiSecurityContextListener
 
     public function __construct(AuthenticationHelperInterface $authenticationHelper,
                                 UserManagerInterface $userManager,
-                                KottiSecurityContextInterface $kottiSecurityContext)
+                                KottiSecurityContextInterface $kottiSecurityContext,
+                                LoggerInterface $logger)
     {
         $this->authenticationHelper = $authenticationHelper;
         $this->userManager = $userManager;
         $this->kottiSecurityContext = $kottiSecurityContext;
+        $this->logger = $logger;
     }
 
     public function onKernelRequest(GetResponseEvent $event)
     {
         if (HttpKernelInterface::MASTER_REQUEST !== $event->getRequestType()) {
+            return;
+        }
+
+        $request = $event->getRequest();
+
+        if(!$this->authenticationHelper->canIdentify($request)) {
+            $this->logger->debug('KottiSecurityContextListener can\'t identify current request', [
+                'request' => $request->__toString()
+            ]);
             return;
         }
 
@@ -43,6 +55,9 @@ class KottiSecurityContextListener
             }
             return;
         }catch (IdentifyException $e) {
+            $this->logger->error($e, [
+                'request' => $request->__toString()
+            ]);
             return;
         }
     }
