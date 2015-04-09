@@ -2,6 +2,12 @@ History
 =======
 
 
+0.1.2 (2015-04-09)
+------------------
+
+- adds logger, use logger in KottiSecurityContextListener [Ruben Barilani]
+
+
 0.1.1 (2015-04-09)
 ------------------
 
