@@ -2,6 +2,12 @@ History
 =======
 
 
+0.1.1 (2015-04-09)
+------------------
+
+- 526976b updates docs, use admin.title if defined [Ruben Barilani]
+
+
 0.1.0 (2015-04-09)
 ------------------
 
