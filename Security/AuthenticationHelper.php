@@ -54,6 +54,12 @@ class AuthenticationHelper implements AuthenticationHelperInterface
         'md5' => 32
     ];
 
+    /**
+     * @param string $secret     - the secret (a string) used for auth_tkt cookie signing. Required.
+     * @param string $cookieName - default: 'auth_tkt'. The cookie name used  (string).  Optional.
+     * @param string $hashAlg    - default: 'sha512'. tha hash algorithm used to encrypt digest. it can be 'sha512' or 'md5' only. Optional.
+     * @param bool   $includeIp  - default: false.  Make the requesting IP address part of the authentication data in the cookie.  Optional.
+     */
     public function __construct($secret, $cookieName = 'auth_tkt', $hashAlg = 'sha512', $includeIp = false )
     {
         $this->secret     = $secret;

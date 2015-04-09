@@ -105,5 +105,6 @@ truelab_kotti_security:
         secret: KottiPyramidAuthenticationSecretValue  # !!!required
         cookie_name: auth_tkt
         hash_alg: sha512
+        include_ip: false
 ```            
              
