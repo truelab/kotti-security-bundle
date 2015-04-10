@@ -23,18 +23,17 @@ class KottiSecurityContext implements KottiSecurityContextInterface
         $this->user = $user;
     }
 
+    /**
+     * Check if $role (string) is present in the roles array
+     * WARN!! it's stupid, we actually don't use the role hierarchy nor ACL nor Symfony voters
+     * e.g. it's not like using: ```is_granted('ROLE_ADMIN')```
+     *
+     * @param string $role
+     *
+     * @return bool
+     */
     public function hasRole($role)
     {
-        if(!$this->user) {
-            return false;
-        }
-
-        $userRoles = $this->user->getRoles();
-
-        if(in_array($role, $userRoles)) {
-            return true;
-        }else{
-            return false;
-        }
+        return $this->user ? in_array($role, $this->user->getRoles()) : false;
     }
 }
