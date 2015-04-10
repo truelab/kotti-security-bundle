@@ -1,6 +1,12 @@
 History
 =======
 
+0.1.6 (2015-04-10)
+------------------ 
+
+- 42bc30c adds twig extension, adds gliphicons, adds type title [Ruben Barilani]
+
+
 0.1.5 (2015-04-10)
 ------------------
 
