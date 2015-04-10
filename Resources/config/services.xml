@@ -85,6 +85,13 @@
             <tag name="truelab_kotti_model.default_criteria" />
         </service>
 
+        <!-- TWIG EXTENSION -->
+        <service id="truelab_kotti_security.twig.kotti_security"
+                 class="Truelab\KottiSecurityBundle\Twig\KottiSecurityExtension"
+                 public="false">
+            <tag name="twig.extension" />
+        </service>
+
     </services>
 
 </container>

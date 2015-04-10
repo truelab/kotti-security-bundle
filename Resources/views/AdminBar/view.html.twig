@@ -16,17 +16,33 @@
             <div class="collapse navbar-collapse" id="admin-navbar-collapse-1">
                 <ul class="nav navbar-nav">
 
-                    {% if context is defined and context is not null%}
+                    {% if context is defined and context is not null %}
+                        {% set context = kotti_security_context_adapter(context) %}
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                                 Page <span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu" role="menu">
+
                                 <li><a href="#"><small>status:</small> {{ context.state }}</a></li>
+                                <li><a href="#"><small>type:</small> {{ context.typeTitle }}</a></li>
+
                                 <li class="divider"></li>
-                                <li><a href="{{backend_base_url}}{{ context.path }}@@edit" target="_blank">Edit</a></li>
-                                <li><a href="{{backend_base_url}}{{ context.path }}@@contents" target="_blank">Contents</a></li>
-                                <li><a href="{{backend_base_url}}{{ context.path }}" target="_blank">View</a></li>
+                                <li>
+                                    <a href="{{backend_base_url}}{{ context.path }}@@edit" target="_blank">
+                                        <span class="glyphicon glyphicon-pencil"></span>&nbsp; Edit
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{backend_base_url}}{{ context.path }}@@contents" target="_blank">
+                                        <span class="glyphicon glyphicon-folder-open"></span>&nbsp; Contents
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{backend_base_url}}{{ context.path }}" target="_blank">
+                                        <span class="glyphicon glyphicon-eye-open"></span>&nbsp; View
+                                    </a>
+                                </li>
                             </ul>
                         </li>
                     {% endif %}
@@ -34,7 +50,7 @@
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     <li><a href="{{ backend_base_url }}" target="_blank">
-                            <small>Signed in as</small> {{ admin.title is defined ? admin.title : admin.username }}</a>
+                           <span class="glyphicon glyphicon-user"></span>&nbsp; <small>Signed in as</small> {{ admin.title is defined ? admin.title : admin.username }}</a>
                     </li>
                 </ul>
             </div>
