@@ -1,6 +1,12 @@
 History
 =======
 
+0.1.3 (2015-04-10)
+------------------
+
+- 4e6cf55 updates .travis.yml [Ruben Barilani]
+- 6d43798 add exception, more verbose exception, don't log request [Ruben Barilani]
+
 
 0.1.2 (2015-04-09)
 ------------------
