@@ -1,6 +1,12 @@
 History
 =======
 
+0.1.5 (2015-04-10)
+------------------
+
+- bca16e9 removes <style> add navbar-admin class [Ruben Barilani]
+
+
 0.1.4 (2015-04-10)
 ------------------
 
