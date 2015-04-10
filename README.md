@@ -17,7 +17,7 @@ Adds this to your composer.json and run ```composer update truelab/kotti-securit
 ```json
 {
     "require": {
-        "truelab/kotti-security-bundle" : "dev-dev"
+        "truelab/kotti-security-bundle" : "~0.1"
     },
     "repositories" : [
         { "type":"git", "url":"https://github.com/truelab/kotti-security-bundle.git" }
