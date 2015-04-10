@@ -1,6 +1,13 @@
 History
 =======
 
+0.1.4 (2015-04-10)
+------------------
+
+- 1e05bb4 adds minor README update [Ruben Barilani]
+- 0108c6d adds docs, tests and refactor to KottiSecurityContext [Ruben Barilani]
+
+
 0.1.3 (2015-04-10)
 ------------------
 
