@@ -75,7 +75,8 @@ class ConfigurationTest extends AbstractConfigurationTestCase
                 'hash_alg' => 'sha512',
                 'cookie_name' => 'auth_tkt',
                 'include_ip' => false
-            ]
+            ],
+            'see_as_anonymous' => false
         ];
 
         $this->assertProcessedConfigurationEquals([

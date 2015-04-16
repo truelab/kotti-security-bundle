@@ -60,7 +60,9 @@
 
         <!-- KOTTI SECURITY CONTEXT -->
         <service id="truelab_kotti_security.kotti_security_context"
-            class="Truelab\KottiSecurityBundle\Security\KottiSecurityContext"/>
+            class="Truelab\KottiSecurityBundle\Security\KottiSecurityContext">
+                <argument type="service" id="session" />
+            </service>
 
         <!-- KOTTI SECURITY CONTEXT LISTENER -->
         <service id="truelab_kotti_security.kotti_security_context_listener"

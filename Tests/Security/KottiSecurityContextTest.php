@@ -17,7 +17,9 @@ class KottiSecurityContextTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->kottiSecurityContext = new KottiSecurityContext();
+        $this->kottiSecurityContext = new KottiSecurityContext(
+            $this->getSessionMock()
+        );
     }
 
     public function testHasRoleReturnFalseWhenUserIsNotSet()
@@ -60,6 +62,49 @@ class KottiSecurityContextTest extends \PHPUnit_Framework_TestCase
         $expected = true;
 
         $this->assertEquals($expected, $actual);
+    }
+
+    public function testActAsAnonymousDefault()
+    {
+        $session = $this->getSessionMock();
+
+        $session
+            ->expects($this->once())
+            ->method('get')
+            ->with(KottiSecurityContext::ACT_AS_ANON_SESSION_KEY, false)
+            ->willReturn(false);
+
+        $securityContext = new KottiSecurityContext($session);
+
+        $this->assertEquals(false, $securityContext->actAsAnonymous());
+    }
+
+    public function testActAsAnonymousSetTrue()
+    {
+        $session = $this->getSessionMock();
+
+        $session
+            ->expects($this->any())
+            ->method('set')
+            ->with(KottiSecurityContext::ACT_AS_ANON_SESSION_KEY, true);
+
+        $session
+            ->expects($this->any())
+            ->method('get')
+            ->with(KottiSecurityContext::ACT_AS_ANON_SESSION_KEY, false)
+            ->willReturn(true);
+
+        $securityContext = new KottiSecurityContext($session);
+
+        $this->assertEquals(true, $securityContext->actAsAnonymous(true));
+    }
+
+    protected function getSessionMock()
+    {
+        return $this
+            ->getMockBuilder('Symfony\Component\HttpFoundation\Session\SessionInterface')
+            ->disableOriginalConstructor()
+            ->getMock();
     }
 
 }

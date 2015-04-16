@@ -37,7 +37,7 @@ class StateDefaultCriteria implements DefaultCriteriaInterface
      */
     public function getCriteria()
     {
-        if($this->isAdmin()) {
+        if($this->isAdmin() && $this->actAsAnonymous() === false) {
             return ['(contents.state = ? OR contents.state = ?)' => ['public', 'private']] ;
         }else{
             return ['contents.state = ?' => 'public'];
@@ -52,5 +52,10 @@ class StateDefaultCriteria implements DefaultCriteriaInterface
     protected function isAdmin()
     {
         return $this->kottiSecurityContext->hasRole('ROLE_ADMIN');
+    }
+
+    protected function actAsAnonymous()
+    {
+        return $this->kottiSecurityContext->actAsAnonymous();
     }
 }

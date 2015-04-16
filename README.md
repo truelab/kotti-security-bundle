@@ -103,6 +103,34 @@ eg.
 {% endblock %}
 ```
 
+### See as anonymous
+
+When activated this feature permits to an admin user to see the site as an anonymous user ( no "private" contents, active esi fragment cache, etc. ).
+To activate this feature set ```see_as_anonymous``` config option to ```true```.
+ 
+eg.
+
+```yaml
+
+truelab_kotti_security:
+    auth:
+        secret: KottiSecret # !!!required
+    see_as_anonymous: true  # activate see as feature     
+  
+```  
+
+then imports kotti security bundle routes in your app routing file (eg. ```app/config/routing.yml```).
+
+eg.
+
+```yaml
+
+_kotti_security:
+    prefix: '/kotti_security'
+    resource: "@TruelabKottiSecurityBundle/Resources/config/routing.xml"
+```  
+
+
 ## Configuration reference
 
 ```yaml
@@ -113,5 +141,6 @@ truelab_kotti_security:
         cookie_name: auth_tkt
         hash_alg: sha512
         include_ip: false
+    see_as_anonymous: false    
 ```            
              

@@ -67,6 +67,10 @@ class Configuration implements ConfigurationInterface
                         ->end()
                     ->end()
                 ->end()
+                ->scalarNode('see_as_anonymous')
+                    ->cannotBeEmpty()
+                    ->defaultValue($defaultConfig['see_as_anonymous'])
+                ->end()
             ->end();
 
 
@@ -80,7 +84,8 @@ class Configuration implements ConfigurationInterface
                 'hash_alg' => 'sha512',
                 'cookie_name' => 'auth_tkt',
                 'include_ip' => false
-            ]
+            ],
+            'see_as_anonymous' => false
         ];
     }
 }

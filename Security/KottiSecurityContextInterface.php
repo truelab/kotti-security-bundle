@@ -16,4 +16,14 @@ interface KottiSecurityContextInterface
     public function setUser(PrincipalInterface $user);
 
     public function hasRole($role);
+
+    /**
+     * Return if current user act as anonymous
+     * With $flag arg you can change the state (true|false)
+     *
+     * @param bool $flag
+     *
+     * @return bool
+     */
+    public function actAsAnonymous($flag = null);
 }
