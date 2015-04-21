@@ -76,7 +76,10 @@ class ConfigurationTest extends AbstractConfigurationTestCase
                 'cookie_name' => 'auth_tkt',
                 'include_ip' => false
             ],
-            'see_as_anonymous' => false
+            'act_as_anonymous' => false,
+            'twig' => [
+                'http_kernel_extension_override' => false
+            ]
         ];
 
         $this->assertProcessedConfigurationEquals([

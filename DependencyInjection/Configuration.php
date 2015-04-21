@@ -12,11 +12,21 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
  */
 class Configuration implements ConfigurationInterface
 {
-    public static $DEFAULT_CONFIG = [
-        'auth' => [
-            'secret' => 'qwerty'
-        ]
-    ];
+
+    public function getDefaultConfiguration()
+    {
+        return [
+            'auth' => [
+                'hash_alg' => 'sha512',
+                'cookie_name' => 'auth_tkt',
+                'include_ip' => false
+            ],
+            'act_as_anonymous' => false,
+            'twig' => [
+                'http_kernel_extension_override' => false
+            ]
+        ];
+    }
 
     /**
      * {@inheritdoc}
@@ -67,25 +77,22 @@ class Configuration implements ConfigurationInterface
                         ->end()
                     ->end()
                 ->end()
-                ->scalarNode('see_as_anonymous')
+                ->scalarNode('act_as_anonymous')
                     ->cannotBeEmpty()
-                    ->defaultValue($defaultConfig['see_as_anonymous'])
+                    ->defaultValue($defaultConfig['act_as_anonymous'])
                 ->end()
+                ->arrayNode('twig')
+                    ->cannotBeEmpty()
+                     ->addDefaultsIfNotSet()
+                    ->children()
+                        ->scalarNode('http_kernel_extension_override')
+                            ->treatNullLike(false)
+                            ->defaultValue($defaultConfig['twig']['http_kernel_extension_override'])
+                        ->end()
+                    ->end()
             ->end();
 
 
         return $treeBuilder;
-    }
-
-    public function getDefaultConfiguration()
-    {
-        return [
-            'auth' => [
-                'hash_alg' => 'sha512',
-                'cookie_name' => 'auth_tkt',
-                'include_ip' => false
-            ],
-            'see_as_anonymous' => false
-        ];
     }
 }

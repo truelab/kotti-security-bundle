@@ -62,6 +62,7 @@
         <service id="truelab_kotti_security.kotti_security_context"
             class="Truelab\KottiSecurityBundle\Security\KottiSecurityContext">
                 <argument type="service" id="session" />
+                <argument>%truelab_kotti_security.act_as_anonymous%</argument>
             </service>
 
         <!-- KOTTI SECURITY CONTEXT LISTENER -->

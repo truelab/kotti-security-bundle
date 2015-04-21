@@ -13,11 +13,14 @@ class KottiSecurityContext implements KottiSecurityContextInterface
 {
     private $session;
 
+    private $actAsAnonymousIsActive;
+
     const ACT_AS_ANON_SESSION_KEY = 'kotti_security_act_as_anonymous';
 
-    public function __construct(SessionInterface $session)
+    public function __construct(SessionInterface $session, $actAsAnonymousIsActive = false)
     {
         $this->session = $session;
+        $this->actAsAnonymousIsActive = $actAsAnonymousIsActive;
     }
 
     /**
@@ -54,7 +57,11 @@ class KottiSecurityContext implements KottiSecurityContextInterface
      */
     public function actAsAnonymous($flag = null)
     {
-        if(!$flag !== null && is_bool($flag)) {
+        if(!$this->actAsAnonymousIsActive) {
+            return false;
+        }
+
+        if($this->actAsAnonymousIsActive && !$flag !== null && is_bool($flag)) {
             $this->session->set(self::ACT_AS_ANON_SESSION_KEY, $flag);
         }
 

@@ -105,8 +105,8 @@ eg.
 
 ### See as anonymous
 
-When activated this feature permits to an admin user to see the site as an anonymous user ( no "private" contents, active esi fragment cache, etc. ).
-To activate this feature set ```see_as_anonymous``` config option to ```true```.
+When activated this feature permits to an admin user to see the site as an anonymous user ( no "private" contents, etc. ).
+To activate this feature set ```act_as_anonymous``` config option to ```true```.
  
 eg.
 
@@ -115,7 +115,7 @@ eg.
 truelab_kotti_security:
     auth:
         secret: KottiSecret # !!!required
-    see_as_anonymous: true  # activate see as feature     
+    act_as_anonymous: true  # activate see as feature     
   
 ```  
 
@@ -130,6 +130,22 @@ _kotti_security:
     resource: "@TruelabKottiSecurityBundle/Resources/config/routing.xml"
 ```  
 
+#### Twig Http Kernel Extension Override
+
+When the related option (```truelab_kotti_security.twig.http_kernel_extension_override```) is set to true
+we override some twig functions: ```render_esi```.
+In our case we bypass render_esi when a connected user is an admin and is not acting as anonymous.
+
+eg.
+
+```yaml
+
+truelab_kotti_security:
+    auth:
+        secret: KottiSecret # !!!required
+    twig:
+        http_kernel_extension_override: true # default it's false
+```
 
 ## Configuration reference
 
@@ -141,6 +157,8 @@ truelab_kotti_security:
         cookie_name: auth_tkt
         hash_alg: sha512
         include_ip: false
-    see_as_anonymous: false    
+    act_as_anonymous: false    
+    twig:
+        http_kernel_extension_override: false
 ```            
              

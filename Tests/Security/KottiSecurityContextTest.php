@@ -68,12 +68,6 @@ class KottiSecurityContextTest extends \PHPUnit_Framework_TestCase
     {
         $session = $this->getSessionMock();
 
-        $session
-            ->expects($this->once())
-            ->method('get')
-            ->with(KottiSecurityContext::ACT_AS_ANON_SESSION_KEY, false)
-            ->willReturn(false);
-
         $securityContext = new KottiSecurityContext($session);
 
         $this->assertEquals(false, $securityContext->actAsAnonymous());
@@ -94,7 +88,7 @@ class KottiSecurityContextTest extends \PHPUnit_Framework_TestCase
             ->with(KottiSecurityContext::ACT_AS_ANON_SESSION_KEY, false)
             ->willReturn(true);
 
-        $securityContext = new KottiSecurityContext($session);
+        $securityContext = new KottiSecurityContext($session, true);
 
         $this->assertEquals(true, $securityContext->actAsAnonymous(true));
     }

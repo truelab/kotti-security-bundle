@@ -34,8 +34,8 @@ class AdminBarController extends Controller
         return [
             'admin' => $admin,
             'backend_base_url' => $backendBaseUrl,
-            'see_as_anonymous' => [
-                'active' => $this->seeAsAnonymousIsActive(),
+            'act_as_anonymous' => [
+                'active' => $this->actAsAnonymousIsActive(),
                 'flag' => $kottiSecurityContext->actAsAnonymous(),
                 'referrer' => $request->getUri()
             ]
@@ -49,7 +49,7 @@ class AdminBarController extends Controller
      */
     public function actAsAnonymousAction(Request $request)
     {
-        $active = $this->seeAsAnonymousIsActive();
+        $active = $this->actAsAnonymousIsActive();
 
         if(!$this->isGranted('ROLE_ADMIN') && $active !== false) {
             throw new AccessDeniedHttpException();
@@ -63,8 +63,8 @@ class AdminBarController extends Controller
         return $this->redirect($referrer);
     }
 
-    protected function seeAsAnonymousIsActive()
+    protected function actAsAnonymousIsActive()
     {
-        return   $active = $this->container->hasParameter('truelab_kotti_security.auth.see_as_anonymous') ? $this->container->getParameter('truelab_kotti_security.auth.see_as_anonymous') : false;
+        return   $active = $this->container->hasParameter('truelab_kotti_security.act_as_anonymous') ? $this->container->getParameter('truelab_kotti_security.act_as_anonymous') : false;
     }
 }

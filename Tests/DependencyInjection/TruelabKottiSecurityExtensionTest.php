@@ -33,6 +33,10 @@ class TruelabKottiSecurityExtensionTest extends AbstractExtensionTestCase
                 'hash_alg' => 'sha512',
                 'cookie_name' => 'auth_tkt',
                 'include_ip' => false
+            ],
+            'act_as_anonymous' => false,
+            'twig' => [
+                'http_kernel_extension_override' => false
             ]
         ];
 
@@ -44,6 +48,8 @@ class TruelabKottiSecurityExtensionTest extends AbstractExtensionTestCase
         $this->assertContainerBuilderHasParameter('truelab_kotti_security.auth.cookie_name', $expected['auth']['cookie_name']);
         $this->assertContainerBuilderHasParameter('truelab_kotti_security.auth.hash_alg', $expected['auth']['hash_alg']);
         $this->assertContainerBuilderHasParameter('truelab_kotti_security.auth.include_ip', $expected['auth']['include_ip']);
+        $this->assertContainerBuilderHasParameter('truelab_kotti_security.act_as_anonymous', $expected['act_as_anonymous']);
+        $this->assertContainerBuilderHasParameter('truelab_kotti_security.twig.http_kernel_extension_override', $expected['twig']['http_kernel_extension_override']);
     }
 
     public function testAfterLoadingAllParametersHadBeenSet()
