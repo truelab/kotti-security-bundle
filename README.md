@@ -103,9 +103,9 @@ eg.
 {% endblock %}
 ```
 
-### See as anonymous
+### Act as anonymous
 
-When activated this feature permits to an admin user to see the site as an anonymous user ( no "private" contents, etc. ).
+When activated this feature permits to an admin user to act/see the site as an anonymous user ( no "private" contents, etc. ).
 To activate this feature set ```act_as_anonymous``` config option to ```true```.
  
 eg.
