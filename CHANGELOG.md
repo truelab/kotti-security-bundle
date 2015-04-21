@@ -1,6 +1,15 @@
 History
 =======
 
+
+1.0.0 (2015-04-21)
+------------------ 
+
+- 09cad1c updates docs, adds minor updates [Ruben Barilani]
+- f91833c adds refactor act as anonymous, optionally override render_esi, adds twig.http_kernel_extension_override option, updates README.md [Ruben Barilani]
+- a74a749 adds see/act as anonymous feature [Ruben Barilani]
+
+
 0.1.6 (2015-04-10)
 ------------------ 
 
